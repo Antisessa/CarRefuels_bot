@@ -1,0 +1,23 @@
+server.port = 8085
+
+spring.rabbitmq.host = localhost
+spring.rabbitmq.port = 5672
+spring.rabbitmq.username =
+spring.rabbitmq.password =
+
+#spring.datasource.url=jdbc:postgresql://localhost:5432/tessa_db
+#spring.datasource.username=
+#spring.datasource.password=
+#spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Config which allow spring create table in DB on existed POJO annotation @Table, @Column etc.
+#spring.jpa.generate-ddl=true
+#spring.jpa.show-sql=true
+
+#token=
+#service.file_info.uri=https://api.telegram.org/bot{token}/getFile?file_id={fileId}
+#service.file_storage.uri=https://api.telegram.org/file/bot{token}/{filePath}
+#service.mail.url=
+
+#link.address=
+#salt=

@@ -2,3 +2,5 @@
 /dispatcher/src/main/resources/application.properties
 target/
 logs/
+/logs/
+/node/src/main/resources/application.properties
