@@ -14,6 +14,7 @@
         <module>node</module>
         <module>common-jpa</module>
         <module>refuel-service</module>
+        <module>common-exceptionUtils</module>
     </modules>
 
     <properties>
@@ -25,7 +26,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.2</version>
+        <version>2.7.15</version>
     </parent>
 
     <dependencies>

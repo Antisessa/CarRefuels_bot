@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RefuelService {
+public class RefuelServiceMain {
     public static void main(String[] args) {
-        SpringApplication.run(RefuelService.class);
+        SpringApplication.run(RefuelServiceMain.class);
     }
 }
