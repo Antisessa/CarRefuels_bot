@@ -4,3 +4,4 @@ target/
 logs/
 /logs/
 /node/src/main/resources/application.properties
+/refuel-service/src/main/resources/application.properties

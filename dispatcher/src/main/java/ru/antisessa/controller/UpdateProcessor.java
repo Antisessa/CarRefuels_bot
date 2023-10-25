@@ -29,9 +29,7 @@ public class UpdateProcessor {
         if (update == null) {
             log.error("Received update is null");
             return;
-        }
-
-        if(update.hasMessage()){
+        } else if(update.hasMessage()) {
             distributeMessageByType(update);
         } else {
             log.error("Update without message. Update: " + update);
