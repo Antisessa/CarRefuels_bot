@@ -3,11 +3,13 @@ package ru.antisessa.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.antisessa.DTO.CarDTO;
 import ru.antisessa.models.Car;
 import ru.antisessa.repositories.CarRepository;
 import ru.antisessa.services.CarService;
 import ru.antisessa.util.car.CarAlreadyCreatedException;
 import ru.antisessa.util.car.CarNotFoundException;
+import ru.antisessa.utils.ConverterDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @Service
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
+    private final ConverterDTO converterDTO;
 
     ////////////// Методы для поиска //////////////
     public List<Car> findAll(){
@@ -25,6 +28,17 @@ public class CarServiceImpl implements CarService {
     public Car findOne(int id){
         Optional<Car> foundCar = carRepository.findById(id);
         return foundCar.orElseThrow(CarNotFoundException::new);
+    }
+
+    @Transactional
+    public CarDTO.Response.GetCar findOneTest(int id) {
+        Optional<Car> optionalCar = carRepository.findById(id);
+        if (optionalCar.isPresent()) {
+            var carDTO = converterDTO.carToDTOFullInfo(optionalCar.get());
+            return carDTO;
+        } else {
+            throw new CarNotFoundException();
+        }
     }
 
     public Car findByName(String name){

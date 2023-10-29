@@ -84,6 +84,16 @@ public enum CarDTO {
             int gasTankVolume;
             int countRefuels;
 
+            @Override
+            public String toString() {
+                final StringBuilder sb = new StringBuilder("GetCar{");
+                sb.append("name='").append(name).append('\'');
+                sb.append(", odometer=").append(odometer);
+                sb.append(", gasTankVolume=").append(gasTankVolume);
+                sb.append(", countRefuels=").append(countRefuels);
+                sb.append('}');
+                return sb.toString();
+            }
         }
 
         @Getter @Setter
@@ -93,6 +103,19 @@ public enum CarDTO {
 
             @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
             List<RefuelDTO.Response.GetRefuel> refuels;
+
+            @Override
+            public String toString() {
+                final StringBuilder sb = new StringBuilder(name + "info{\n");
+                sb.append("id=").append(id).append(",\n");
+                sb.append("name='").append(name).append('\'').append(",\n");
+                sb.append("odometer=").append(odometer).append(",\n");
+                sb.append("gasTankVolume=").append(gasTankVolume).append(",\n");
+                sb.append("countRefuels=").append(countRefuels).append(",\n");
+                sb.append("refuels=").append(refuels).append(",\n");
+                sb.append('}');
+                return sb.toString();
+            }
         }
     }
 }

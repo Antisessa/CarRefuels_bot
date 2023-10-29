@@ -6,18 +6,16 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.antisessa.enums.UserState;
 import ru.antisessa.models.AppUser;
 import ru.antisessa.repositories.AppUserRepository;
+import ru.antisessa.service.AppUserService;
 import ru.antisessa.service.MainService;
 import ru.antisessa.service.ProducerService;
 import ru.antisessa.service.enums.ServiceCommand;
 
-import java.util.Optional;
-
 import static ru.antisessa.enums.UserState.BASIC_STATE;
+import static ru.antisessa.enums.UserState.FINDING;
 import static ru.antisessa.service.enums.ServiceCommand.*;
-import static ru.antisessa.service.enums.ServiceCommand.START;
 
 @Log4j
 @RequiredArgsConstructor
@@ -25,11 +23,13 @@ import static ru.antisessa.service.enums.ServiceCommand.START;
 public class MainServiceImpl implements MainService {
     private final ProducerService producerService;
     private final AppUserRepository appUserRepository;
+    private final AppUserService appUserService;
 
     @Override
     public void processTextMessage(Update update) {
 
-        var appUser = findOrSaveAppUser(update); // поиск и (возможно) добавление пользователя в БД
+        var telegramUser = update.getMessage().getFrom();
+        var appUser = findOrSaveAppUser(telegramUser); // поиск и (возможно) добавление пользователя в БД
         var userState = appUser.getState(); // Получаем состояние пользователя
         var text = update.getMessage().getText(); // Получаем текстовое сообщение из update message
         var output = ""; // Переменная содержащая ответ для пользователя
@@ -43,6 +43,9 @@ public class MainServiceImpl implements MainService {
         } else if (BASIC_STATE.equals(userState)) {
             // если статус user - BASIC, то обрабатываем введенную им команду
             output = processServiceCommand(appUser, serviceCommand);
+        } else if (FINDING.equals(userState)) {
+            // если статус user - BASIC, то идем в метод поиска
+            output = appUserService.findOneCar(update);
         }
 
         // Получаем ID чата из входящего update
@@ -56,23 +59,37 @@ public class MainServiceImpl implements MainService {
     private String processServiceCommand(AppUser appUser, ServiceCommand cmd) {
 //        var serviceCommand = ServiceCommand.fromValue(cmd);
 
-        if (REGISTRATION.equals(cmd)) {
-            return "Команда в стадии разработки, попробуйте позже..."; // TODO доделать регистрацию пользователя
-        } else if (HELP.equals(cmd)) {
-            return help();
+        switch (cmd) {
+            case REGISTRATION:
+                return "Команда в стадии разработки, попробуйте позже..."; // TODO доделать регистрацию пользователя
 
-        } else if (START.equals(cmd)) {
-            return "Приветствую" + appUser.getFirstName() + "!\n" +
-                    "Чтобы посмотреть список доступных команд введите /help";
-        } else {
-            return "Неизвестная команда! Чтобы посмотреть список доступных команд введите /help";
+            case HELP:
+                return help();
+
+            case START:
+                return "Приветствую" + appUser.getFirstName() + "!\n" +
+                        "Чтобы посмотреть список доступных команд введите /help";
+            case FIND_ONE:
+                return findProcess(appUser);
+
+            default:
+                return "Неизвестная команда! Чтобы посмотреть список доступных команд введите /help";
         }
+    }
+
+    private String findProcess(AppUser appUser) {
+        appUser.setState(FINDING);
+        appUserRepository.save(appUser);
+
+        return "Вы перешли в режим поиска, введите пожалуйста\n" +
+                "ID машины которую хотите найти: ";
     }
 
     private String help() {
         return "Список доступных команд:\n"
                 + "/cancel - отмена выполнения текущей команды;\n"
-                + "/registration - регистрация пользователя.";
+                + "/registration - регистрация пользователя."
+                + "/find_one - поиск машины по ID";
     }
 
     private String cancelProcess(AppUser appUser) {
@@ -82,9 +99,9 @@ public class MainServiceImpl implements MainService {
         return "Команда отменена!";
     }
 
-    private AppUser findOrSaveAppUser(Update update) {
-        // Достаем User из Update
-        var telegramUser = update.getMessage().getFrom();
+    private AppUser findOrSaveAppUser(User telegramUser) {
+//        // Достаем User из Update
+//        var telegramUser = update.getMessage().getFrom();
 
         //Выполняем проверку наличия этого user в БД
         var optionalAppUser = appUserRepository.findAppUserByTelegramUserId(telegramUser.getId());

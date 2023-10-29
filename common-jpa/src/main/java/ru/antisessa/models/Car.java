@@ -50,7 +50,7 @@ public class Car {
 
     @OneToMany(mappedBy = "car")
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
     private List<Refuel> refuels;
 
     @Override

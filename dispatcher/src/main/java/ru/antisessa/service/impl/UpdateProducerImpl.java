@@ -13,6 +13,7 @@ import ru.antisessa.service.UpdateProducer;
 public class UpdateProducerImpl implements UpdateProducer {
     private final RabbitTemplate rabbitTemplate;
 
+    // Общий метод для отправки сообщения в брокер
     @Override
     public void produce(String rabbitQueue, Update update) {
         log.debug(update.getMessage().getText());

@@ -1,5 +1,6 @@
 package ru.antisessa.enums;
 
 public enum UserState {
-    BASIC_STATE
+    BASIC_STATE,
+    FINDING
 }

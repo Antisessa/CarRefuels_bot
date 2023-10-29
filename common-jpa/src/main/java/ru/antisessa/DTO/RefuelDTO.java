@@ -108,6 +108,18 @@ public enum RefuelDTO {
             double volume;
             double cost;
             double calculatedConsumption;
+
+            @Override
+            public String toString() {
+                final StringBuilder sb = new StringBuilder("\nrefuel{\n");
+                sb.append("id=").append(id).append(",\n");
+                sb.append("dateTime=").append(dateTime).append(",\n");
+                sb.append("volume=").append(volume).append(",\n");
+                sb.append("cost=").append(cost).append(",\n");
+                sb.append("calculatedConsumption=").append(calculatedConsumption);
+                sb.append('}');
+                return sb.toString();
+            }
         }
 
         @Getter @Setter

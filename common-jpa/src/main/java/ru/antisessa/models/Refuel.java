@@ -60,7 +60,7 @@ public class Refuel {
 
     @ManyToOne
     @JoinColumn(name = "car_id", referencedColumnName = "id")
-    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
     private Car car;
 
     @Override

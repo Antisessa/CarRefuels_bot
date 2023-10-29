@@ -8,6 +8,7 @@ import ru.antisessa.models.Refuel;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface RefuelRepository extends JpaRepository<Refuel, Integer> {
     Optional<Refuel> findById(int id);
     Optional<List<Refuel>> findByCar(Car car);
