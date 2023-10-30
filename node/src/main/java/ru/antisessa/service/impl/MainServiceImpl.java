@@ -45,7 +45,7 @@ public class MainServiceImpl implements MainService {
             output = processServiceCommand(appUser, serviceCommand);
         } else if (FINDING.equals(userState)) {
             // если статус user - BASIC, то идем в метод поиска
-            output = appUserService.findOneCar(update);
+            output = appUserService.findOneCarFullInfo(update);
         }
 
         // Получаем ID чата из входящего update
@@ -129,6 +129,6 @@ public class MainServiceImpl implements MainService {
         sendMessage.setText(output);
 
         // Отправляем ответ в RabbitMQ очередь
-        producerService.producerAnswer(sendMessage);
+        producerService.produceAnswer(sendMessage);
     }
 }

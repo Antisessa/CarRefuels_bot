@@ -14,6 +14,7 @@ import ru.antisessa.services.producers.ProducerService;
 import ru.antisessa.util.car.CarNotFoundException;
 import ru.antisessa.utils.ConverterDTO;
 
+import static ru.antisessa.RabbitQueue.FIND_ONE_CAR_FULL_INFO_REQUEST;
 import static ru.antisessa.RabbitQueue.FIND_ONE_CAR_REQUEST;
 
 @RequiredArgsConstructor
@@ -25,11 +26,16 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final ConverterDTO converterDTO;
 
     @Override
-    @RabbitListener(queues = FIND_ONE_CAR_REQUEST)
     public void consumeFindOneCar(Update update) {
+        //TODO закончить метод
+    }
+
+    @Override
+    @RabbitListener(queues = FIND_ONE_CAR_FULL_INFO_REQUEST)
+    public void consumeFindOneCarFullInfo(Update update) {
         log.debug("RefuelService: Find one car request is received");
 
-        var output = "";
+        CarDTO.Response.GetCarFullInfo output = null;
 
         try {
 
@@ -40,18 +46,15 @@ public class ConsumerServiceImpl implements ConsumerService {
 
         var carDTO = carService.findOneTest(requestId);
 
-
-        output = carDTO.toString();
+        output = carDTO;
 
         } catch (CarNotFoundException e) {
             log.debug(e.getMessage());
-            output = e.getMessage();
         } catch (LazyInitializationException e) {
             log.fatal(e.getMessage());
-            output = "LazyInitializationException убило микросервис RefuelService";
         }
         finally {
-            producerService.produceAnswerFindOne(update, output);
+            producerService.produceAnswerFindOneCarFullInfo(update, output);
         }
 
     }

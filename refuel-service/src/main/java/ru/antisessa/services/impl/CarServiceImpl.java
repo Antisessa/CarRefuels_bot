@@ -31,7 +31,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Transactional
-    public CarDTO.Response.GetCar findOneTest(int id) {
+    public CarDTO.Response.GetCarFullInfo findOneTest(int id) {
         Optional<Car> optionalCar = carRepository.findById(id);
         if (optionalCar.isPresent()) {
             var carDTO = converterDTO.carToDTOFullInfo(optionalCar.get());

@@ -29,12 +29,22 @@ public class RabbitConfiguration {
     }
 
     @Bean
-    public Queue findOneRequestQueue() {
+    public Queue findOneCarRequestQueue() {
         return new Queue(FIND_ONE_CAR_REQUEST);
     }
 
     @Bean
-    public Queue findOneResponseQueue() {
+    public Queue findOneCarResponseQueue() {
         return new Queue(FIND_ONE_CAR_RESPONSE);
+    }
+
+    @Bean
+    public Queue findOneCarFullInfoRequestQueue() {
+        return new Queue(FIND_ONE_CAR_FULL_INFO_REQUEST);
+    }
+
+    @Bean
+    public Queue findOneCarFullInfoResponseQueue() {
+        return new Queue(FIND_ONE_CAR_FULL_INFO_RESPONSE);
     }
 }

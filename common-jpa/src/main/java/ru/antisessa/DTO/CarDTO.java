@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -51,6 +52,10 @@ public enum CarDTO {
         int getCountRefuels();
     }
 
+    private interface update {
+        Update getUpdate();
+    }
+
     //Enums Requests для CarController
     public enum Request {
         ; // Пустой enum
@@ -78,11 +83,12 @@ public enum CarDTO {
         ; // Пустой enum
 
         @Getter @Setter
-        public static class GetCar implements name, odometer, gasTankVolume, countRefuels{
+        public static class GetCar implements name, odometer, gasTankVolume, countRefuels, update{
             String name;
             int odometer;
             int gasTankVolume;
             int countRefuels;
+            Update update;
 
             @Override
             public String toString() {

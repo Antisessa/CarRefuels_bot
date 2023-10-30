@@ -5,4 +5,5 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface ConsumerService {
     void consumeFindOneCar(Update update);
+    void consumeFindOneCarFullInfo(Update update);
 }
