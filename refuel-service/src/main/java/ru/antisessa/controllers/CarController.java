@@ -97,30 +97,6 @@ public class CarController {
     }
 
 
-    // Обработка NotFound для метода findOneById
-    @ExceptionHandler
-    private ResponseEntity<CarErrorResponse> handleException(CarNotFoundException e){
-        CarErrorResponse response = new CarErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    // Обработка NotCreated для метода create
-    @ExceptionHandler
-    private ResponseEntity<CarErrorResponse> handleException(CarNotCreatedException e){
-        CarErrorResponse response = new CarErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    // Обработка AlreadyCreated для метода create
-    @ExceptionHandler
-    private ResponseEntity<CarErrorResponse> handleException(CarAlreadyCreatedException e){
-        CarErrorResponse response = new CarErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
-
 
     /////// Code Block for convert Model to DTO ///////
     // Convert Car to GetCar
@@ -139,7 +115,7 @@ public class CarController {
         getCar.setCountRefuels(car.getRefuels().size());
 
         getCar.setRefuels(car.getRefuels().stream()
-                .map(this::refuelToDTO).collect(Collectors.toList()));
+                .map(this::refuelToDTOFullInfo).collect(Collectors.toList()));
 
         return getCar;
     }
@@ -147,6 +123,11 @@ public class CarController {
     // Convert Refuel to GetRefuel
     private RefuelDTO.Response.GetRefuel refuelToDTO(Refuel refuel) {
         return modelMapper.map(refuel, RefuelDTO.Response.GetRefuel.class);
+    }
+
+    // Convert Refuel to GetRefuelFullInfo
+    private RefuelDTO.Response.GetRefuelFullInfo refuelToDTOFullInfo(Refuel refuel) {
+        return modelMapper.map(refuel, RefuelDTO.Response.GetRefuelFullInfo.class);
     }
 
 

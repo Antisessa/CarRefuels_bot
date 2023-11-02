@@ -5,3 +5,10 @@ logs/
 /logs/
 /node/src/main/resources/application.properties
 /refuel-service/src/main/resources/application.properties
+/CarRefuels_bot.iml
+/common-exceptionUtils.iml
+/common-jpa.iml
+/dispatcher.iml
+/node.iml
+/refuel-service.iml
+/common-rabbitmq/common-rabbitmq.iml

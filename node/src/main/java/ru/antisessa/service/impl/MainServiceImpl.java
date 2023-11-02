@@ -46,6 +46,8 @@ public class MainServiceImpl implements MainService {
         } else if (FINDING.equals(userState)) {
             // если статус user - BASIC, то идем в метод поиска
             output = appUserService.findOneCarFullInfo(update);
+            appUser.setState(BASIC_STATE);
+            appUserRepository.save(appUser);
         }
 
         // Получаем ID чата из входящего update

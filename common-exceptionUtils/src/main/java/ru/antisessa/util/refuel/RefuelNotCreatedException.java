@@ -1,7 +1,13 @@
 package ru.antisessa.util.refuel;
 
-public class RefuelNotCreatedException extends RuntimeException{
+import ru.antisessa.util.CustomCarRefuelException;
+
+public class RefuelNotCreatedException extends CustomCarRefuelException {
     public RefuelNotCreatedException(String message){
         super(message);
+    }
+
+    public RefuelNotCreatedException() {
+        super("RefuelNotCreatedException");
     }
 }

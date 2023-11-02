@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.antisessa.service.UpdateProducer;
+import ru.antisessa.service.ProducerService;
 import ru.antisessa.utils.MessageUtils;
 
 import static ru.antisessa.RabbitQueue.TEXT_MESSAGE_UPDATE;
@@ -17,7 +17,7 @@ import static ru.antisessa.RabbitQueue.TEXT_MESSAGE_UPDATE;
 public class UpdateProcessor {
     private TelegramBot telegramBot;
     private final MessageUtils messageUtils;
-    private final UpdateProducer updateProducer;
+    private final ProducerService producerService;
 
     public void registerBot(TelegramBot telegramBot) {
         System.out.println("Class UpdateProcessor created");
@@ -67,6 +67,6 @@ public class UpdateProcessor {
 
     // Метод помещает update с текстовым сообщением в очередь
     private void processTextMessage(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
+        producerService.produce(TEXT_MESSAGE_UPDATE, update);
     }
 }

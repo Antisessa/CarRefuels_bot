@@ -34,7 +34,7 @@ public class ConverterDTO {
         getCar.setCountRefuels(car.getRefuels().size());
 
         getCar.setRefuels(car.getRefuels().stream()
-                .map(this::refuelToDTO).collect(Collectors.toList()));
+                .map(this::refuelToDTOFullInfo).collect(Collectors.toList()));
 
         return getCar;
     }
@@ -42,6 +42,11 @@ public class ConverterDTO {
     // Convert Refuel to GetRefuel
     public RefuelDTO.Response.GetRefuel refuelToDTO(Refuel refuel) {
         return modelMapper.map(refuel, RefuelDTO.Response.GetRefuel.class);
+    }
+
+    // Convert Refuel to GetRefuelFullInfo
+    public RefuelDTO.Response.GetRefuelFullInfo refuelToDTOFullInfo(Refuel refuel) {
+        return modelMapper.map(refuel, RefuelDTO.Response.GetRefuelFullInfo.class);
     }
 
     /////// Code Block for convert DTO to Model ///////

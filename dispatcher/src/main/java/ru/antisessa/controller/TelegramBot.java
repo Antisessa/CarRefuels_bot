@@ -28,14 +28,12 @@ public class TelegramBot extends TelegramWebhookBot {
     private UpdateProcessor updateProcessor;
 
     public TelegramBot(UpdateProcessor updateProcessor){
-        System.out.println("Class TelegramBot created");
         this.updateProcessor = updateProcessor;
     }
 
     @PostConstruct
     public void init(){
         updateProcessor.registerBot(this);
-        System.out.println("TelegramBot and UpdateProcessor has been linked");
 
         try {
             SetWebhook setWebHook = SetWebhook.builder()
@@ -43,7 +41,7 @@ public class TelegramBot extends TelegramWebhookBot {
                     .build();
             this.setWebhook(setWebHook);
         } catch (TelegramApiException e) {
-            log.fatal("Error to link Webhook link" + e);
+            log.fatal("Error Webhook link" + e);
         }
     }
 

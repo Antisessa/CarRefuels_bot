@@ -12,4 +12,6 @@ public interface ProducerService {
     void produceFindOneCarResponse(CarDTO.Response.GetCar response);
 
     void produceFindOneCarFullInfoResponse(CarDTO.Response.GetCarFullInfo response);
+
+    SendMessage prepareSendMessage(String message, Update update);
 }

@@ -1,5 +1,6 @@
 package ru.antisessa.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -13,6 +14,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public enum RefuelDTO {
     ;
@@ -111,6 +113,7 @@ public enum RefuelDTO {
 
             @JsonDeserialize(using = LocalDateTimeDeserializer.class)
             @JsonSerialize(using = LocalDateTimeSerializer.class)
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
             LocalDateTime dateTime;
 
             double volume;
@@ -121,7 +124,8 @@ public enum RefuelDTO {
             public String toString() {
                 final StringBuilder sb = new StringBuilder("\nrefuel{\n");
                 sb.append("id=").append(id).append(",\n");
-                sb.append("dateTime=").append(dateTime).append(",\n");
+                sb.append("dateTime=")
+                        .append(dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).append(",\n");
                 sb.append("volume=").append(volume).append(",\n");
                 sb.append("cost=").append(cost).append(",\n");
                 sb.append("calculatedConsumption=").append(calculatedConsumption);

@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.antisessa.DTO.CarDTO;
 import ru.antisessa.models.Car;
 import ru.antisessa.services.producers.ProducerService;
+import ru.antisessa.util.CustomCarRefuelException;
 
 import static ru.antisessa.RabbitQueue.*;
 

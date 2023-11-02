@@ -108,47 +108,6 @@ public class RefuelController {
         // TODO внутри ответа ResponseEntity добавить информационные поля по текущей последней заправке у машины
     }
 
-    // Обработка NotFoundRefuel для метода findOneById
-    @ExceptionHandler
-    private ResponseEntity<RefuelErrorResponse> handleException(RefuelNotFoundException e){
-        RefuelErrorResponse response = new RefuelErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    // Обработка CarNotFound для метода deleteLastRefuel
-    @ExceptionHandler
-    private ResponseEntity<CarErrorResponse> handleException(CarNotFoundException e){
-        CarErrorResponse response = new CarErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-
-    // Обработка RefuelNotDeleted для метода deleteLastRefuel
-    @ExceptionHandler
-    private ResponseEntity<RefuelErrorResponse> handleException(RefuelNotDeletedException e){
-        RefuelErrorResponse response = new RefuelErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
-
-    // Обработка RefuelValidate для метода create
-    @ExceptionHandler
-    private ResponseEntity<RefuelErrorResponse> handleException(RefuelValidateException e){
-        RefuelErrorResponse response = new RefuelErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
-
-    // Обработка RefuelNotCreated для метода create
-    @ExceptionHandler
-    private ResponseEntity<RefuelErrorResponse> handleException(RefuelNotCreatedException e){
-        RefuelErrorResponse response = new RefuelErrorResponse(e.getMessage(), System.currentTimeMillis());
-
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
-
     ////////////////// Utility //////////////////
 
     // Convert GetRefuel to Refuel

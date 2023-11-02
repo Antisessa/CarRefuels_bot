@@ -29,6 +29,11 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    public Queue answerMessageWithExceptionQueue() {
+        return new Queue(ANSWER_MESSAGE_WITH_EXCEPTION);
+    }
+
+    @Bean
     public Queue findOneCarRequestQueue() {
         return new Queue(FIND_ONE_CAR_REQUEST);
     }

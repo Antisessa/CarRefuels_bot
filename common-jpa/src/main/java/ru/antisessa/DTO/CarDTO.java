@@ -45,7 +45,7 @@ public enum CarDTO {
 
     private interface refuels {
         @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
-        List<RefuelDTO.Response.GetRefuel> getRefuels();
+        List<RefuelDTO.Response.GetRefuelFullInfo> getRefuels();
     }
 
     private interface countRefuels {
@@ -108,7 +108,7 @@ public enum CarDTO {
             int id;
 
             @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
-            List<RefuelDTO.Response.GetRefuel> refuels;
+            List<RefuelDTO.Response.GetRefuelFullInfo> refuels;
 
             @Override
             public String toString() {

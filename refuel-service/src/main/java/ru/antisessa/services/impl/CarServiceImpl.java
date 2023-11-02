@@ -31,13 +31,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Transactional
-    public CarDTO.Response.GetCarFullInfo findOneTest(int id) {
+    public CarDTO.Response.GetCarFullInfo findOneCarFullInfo(int id) {
         Optional<Car> optionalCar = carRepository.findById(id);
+
         if (optionalCar.isPresent()) {
-            var carDTO = converterDTO.carToDTOFullInfo(optionalCar.get());
-            return carDTO;
+            return converterDTO.carToDTOFullInfo(optionalCar.get());
         } else {
-            throw new CarNotFoundException();
+            return new CarDTO.Response.GetCarFullInfo();
         }
     }
 
