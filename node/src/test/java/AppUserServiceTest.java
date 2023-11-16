@@ -1,12 +1,15 @@
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.antisessa.NodeApplication;
 
-public class AppUserServiceTest {
-    public static void main(String[] args) {
-            String s = "2";
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-            int id = Integer.parseInt(s);
+//@ExtendWith(NodeApplication.class)
+@SpringBootTest(classes = NodeApplication.class)
+class AppUserServiceTest {
 
-        System.out.println(id);
+    @Test
+    void SomeTest() {
+        assertTrue(true);
     }
-    }
+}

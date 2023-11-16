@@ -82,8 +82,10 @@ public enum CarDTO {
     public enum Response {
         ; // Пустой enum
 
+        public static class WildCard{}
+
         @Getter @Setter
-        public static class GetCar implements name, odometer, gasTankVolume, countRefuels, update{
+        public static class GetCar extends WildCard implements name, odometer, gasTankVolume, countRefuels, update{
             String name;
             int odometer;
             int gasTankVolume;

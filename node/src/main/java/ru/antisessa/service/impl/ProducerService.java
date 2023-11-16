@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.antisessa.DTO.CarDTO;
 import ru.antisessa.DTO.RefuelDTO;
-import ru.antisessa.service.ProducerService;
 
 import java.time.format.DateTimeFormatter;
 
@@ -17,63 +16,55 @@ import static ru.antisessa.RabbitQueue.*;
 @Log4j
 @RequiredArgsConstructor
 @Service
-public class ProducerServiceImpl implements ProducerService {
+public class ProducerService {
     private final RabbitTemplate rabbitTemplate;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    //Метод передает в очередь RabbitMQ_ANSWER_MESSAGE сообщение для пользователя
-    @Override
+    //Метод передает в очередь ANSWER_MESSAGE сообщение для пользователя
     public void produceAnswer(SendMessage sendMessage) {
-        log.debug("NODE: Answer message is produced");
+        log.debug("NODE ProducerService: Answer message is produced");
         rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
     }
 
-    //Метод передает в очередь RabbitMQ FIND_ONE_REQUEST id для поиска машины
-    @Override
+    //Метод передает в очередь FIND_ONE_CAR_FULL_INFO_REQUEST update с вложенным id для поиска машины
     public void produceFindOneCarFullInfoRequest(Update update) {
-        log.debug("NODE: Find one car full info request is produced");
+        log.debug("NODE ProducerService: Find one car full info request is produced");
         rabbitTemplate.convertAndSend(FIND_ONE_CAR_FULL_INFO_REQUEST, update);
     }
 
-    @Override
-    public void produceFindOneCarResponse(CarDTO.Response.GetCar response) {
-        log.debug("NODE: Starting process find one car response...");
-
-        var sb = new StringBuilder();
-
-        sb.append(response.getName()).append(", ")
-                .append("с пробегом: ").append(response.getOdometer()).append(",\n")
-                .append("количество записанных заправок: ").append(response.getCountRefuels());
-
-
-        // name, с пробегом: + odometer, количество записанных заправок = countRefuels
-        var text = sb.toString();
-
-        log.debug("NODE: Find one car response is processed");
-
-        var sendMessage = prepareSendMessage(text, response.getUpdate());
-
-        log.debug("NODE: Answer message is produced");
-        rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
+    //Метод передает в очередь FIND_ONE_CAR_REQUEST update с вложенным id для поиска машины
+    public void produceFindOneCarRequest(Update update) {
+        log.debug("NODE ProducerService: Find one car request is produced");
+        rabbitTemplate.convertAndSend(FIND_ONE_CAR_REQUEST, update);
     }
 
-    @Override
-    public void produceFindOneCarFullInfoResponse(CarDTO.Response.GetCarFullInfo response) {
-        log.debug("NODE: Starting process find one car full info response...");
+    public void produceFindOneCarResponse(CarDTO.Response.GetCar response) {
+        log.debug("NODE ProducerService: Starting process find one car response...");
 
         if(response.getUpdate() == null) {
-            log.error("NODE: Получено сообщение с update == null");
+            log.error("NODE ProducerService: Получено сообщение с update == null");
+            return;
+        } else if (!validateResponse(response)) {
             return;
         }
 
-        if(response.getName() == null) {
-            var update = response.getUpdate();
-            var requestId = response.getUpdate().getMessage().getText();
-            var text = "Машина с id = " + requestId + " не найдена.";
+        var text = response.getName() + ", " +
+                "с пробегом: " + response.getOdometer() + ",\n" +
+                "количество записанных заправок: " + response.getCountRefuels();
 
-            var sendMessage = prepareSendMessage(text, update);
+        var sendMessage = prepareSendMessage(text, response.getUpdate());
 
-            rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
+        log.debug("NODE ProducerService: Answer message with FindOneCarResponse is produced");
+        rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
+    }
+
+    public void produceFindOneCarFullInfoResponse(CarDTO.Response.GetCarFullInfo response) {
+        log.debug("NODE ProducerService: Starting process find one car full info response...");
+
+        if(response.getUpdate() == null) {
+            log.error("NODE ProducerService: Получено сообщение с update == null");
+            return;
+        } else if (!validateResponse(response)) {
             return;
         }
 
@@ -103,11 +94,29 @@ public class ProducerServiceImpl implements ProducerService {
             var text = sb.toString();
             var sendMessage = prepareSendMessage(text, response.getUpdate());
 
-            log.debug("NODE: Answer message is produced");
+            log.debug("NODE ProducerService: Answer message with FindOneCarFullInfoResponse is produced");
             rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
         }
 
-        @Override
+    public <S extends CarDTO.Response.GetCar> boolean validateResponse(S response){
+        log.debug("NODE ProducerService: Starting validate " + response.getClass());
+
+        if (response.getName() == null) {
+            log.debug("NODE ProducerService: Response entity is empty, preparing answer message");
+
+            var requestId = response.getUpdate().getMessage().getText();
+            var text = "Машина с id = " + requestId + " не найдена.";
+
+            var sendMessage = prepareSendMessage(text, response.getUpdate());
+
+            log.debug("NODE ProducerService: Sending answer message with car not found text");
+            rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
+
+            return false;
+        }
+        return true;
+    }
+
         public SendMessage prepareSendMessage(String message, Update update){
             var sendMessage = new SendMessage();
             sendMessage.setChatId(update.getMessage().getChatId());

@@ -12,3 +12,4 @@ logs/
 /node.iml
 /refuel-service.iml
 /common-rabbitmq/common-rabbitmq.iml
+/testModule/

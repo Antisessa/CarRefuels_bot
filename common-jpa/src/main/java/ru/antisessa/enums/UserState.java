@@ -2,5 +2,11 @@ package ru.antisessa.enums;
 
 public enum UserState {
     BASIC_STATE,
-    FINDING
+    FINDING,
+    FINDING_ONE_CAR,
+    FINDING_ONE_CAR_FULL_INFO,
+    FINDING_ONE_REFUEL,
+    FINDING_ONE_REFUEL_FULL_INFO,
+    CREATING_CAR,
+    CREATING_REFUEL
 }

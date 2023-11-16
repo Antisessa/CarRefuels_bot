@@ -15,6 +15,7 @@
         <module>common-jpa</module>
         <module>refuel-service</module>
         <module>common-exceptionUtils</module>
+        <module>testModule</module>
     </modules>
 
     <properties>

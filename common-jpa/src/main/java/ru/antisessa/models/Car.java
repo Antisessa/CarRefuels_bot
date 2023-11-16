@@ -3,10 +3,7 @@ package ru.antisessa.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -18,7 +15,9 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(exclude = "id")
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "car")

@@ -6,35 +6,33 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.antisessa.DTO.CarDTO;
-import ru.antisessa.service.ConsumerService;
-import ru.antisessa.service.MainService;
-import ru.antisessa.service.ProducerService;
 
 import static ru.antisessa.RabbitQueue.*;
 
 @Log4j
 @RequiredArgsConstructor
 @Service
-public class ConsumerServiceImpl implements ConsumerService {
+public class ConsumerService {
     private final MainService mainService;
     private final ProducerService producerService;
 
-    @Override
+    String serviceName = "NODE ConsumerService: ";
+
     @RabbitListener(queues = TEXT_MESSAGE_UPDATE)
     public void consumeTextMessageUpdated(Update update) {
-        log.debug("NODE: Text message is received");
+        log.debug(serviceName + "Text message is received");
         mainService.processTextMessage(update);
     }
 
-    @Override
+    @RabbitListener(queues = FIND_ONE_CAR_RESPONSE)
     public void consumeGetCarResponse(CarDTO.Response.GetCar response) {
-
+        log.debug(serviceName + "GetCar response is received");
+        producerService.produceFindOneCarResponse(response);
     }
 
-    @Override
     @RabbitListener(queues = FIND_ONE_CAR_FULL_INFO_RESPONSE)
     public void consumeGetCarFullInfoResponse(CarDTO.Response.GetCarFullInfo response) {
-        log.debug("NODE: GetCar response is received");
+        log.debug(serviceName + "GetCarFullInfo response is received");
         producerService.produceFindOneCarFullInfoResponse(response);
     }
 }

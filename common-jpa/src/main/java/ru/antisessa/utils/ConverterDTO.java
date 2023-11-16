@@ -1,6 +1,7 @@
 package ru.antisessa.utils;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.antisessa.DTO.CarDTO;
 import ru.antisessa.DTO.RefuelDTO;
@@ -9,6 +10,7 @@ import ru.antisessa.models.Refuel;
 
 import java.util.stream.Collectors;
 
+@Component
 public class ConverterDTO {
     ModelMapper modelMapper = new ModelMapper();
 

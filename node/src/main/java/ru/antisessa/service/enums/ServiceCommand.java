@@ -5,7 +5,10 @@ public enum ServiceCommand {
     REGISTRATION("/registration"),
     CANCEL("/cancel"),
     START("/start"),
-    FIND_ONE("/find_one");
+    FIND_ONE_CAR("/find_one_car"),
+    FIND_ONE_CAR_FULL_INFO("/find_one_car_full_info"),
+    FIND_ONE_REFUEL("/find_one_refuel"),
+    FIND_ONE_REFUEL_FULL_INFO("/find_one_refuel_full_info");
 
     private final String value;
 

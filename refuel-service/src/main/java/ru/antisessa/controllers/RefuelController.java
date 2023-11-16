@@ -2,7 +2,6 @@ package ru.antisessa.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,10 +11,7 @@ import ru.antisessa.DTO.RefuelDTO;
 import ru.antisessa.models.Car;
 import ru.antisessa.models.Refuel;
 import ru.antisessa.services.CarService;
-import ru.antisessa.services.impl.CarServiceImpl;
-import ru.antisessa.services.impl.RefuelServiceImpl;
-import ru.antisessa.util.car.CarErrorResponse;
-import ru.antisessa.util.car.CarNotFoundException;
+import ru.antisessa.services.RefuelService;
 import ru.antisessa.util.refuel.*;
 
 import javax.validation.Valid;
@@ -26,7 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/acr/refuel")
 @RestController //@Controller + @ResponseBody над каждым методом для Jackson
 public class RefuelController {
-    private final RefuelServiceImpl refuelServiceImpl;
+    private final RefuelService refuelService;
     private final CarService carService;
     private final ModelMapper modelMapper;
 
@@ -39,26 +35,26 @@ public class RefuelController {
     // Найти все записи о заправках с их краткими данными
     @GetMapping()
     public List<RefuelDTO.Response.GetRefuel> allRefuel(){
-        return refuelServiceImpl.findAll().stream().
+        return refuelService.findAll().stream().
                 map(this::convertToDTO).collect(Collectors.toList());
     }
     // Найти все записи о заправках с их полными данными
     @GetMapping("/full")
     public List<RefuelDTO.Response.GetRefuelFullInfo> allRefuelFullInfo(){
-        return refuelServiceImpl.findAll().stream().
+        return refuelService.findAll().stream().
                 map(this::convertToDTOFullInfo).collect(Collectors.toList());
     }
 
     // Найти заправку по ID
     @GetMapping("/{id}")
     public RefuelDTO.Response.GetRefuel findOneById(@PathVariable("id") int id){
-        return convertToDTO(refuelServiceImpl.findOne(id));
+        return convertToDTO(refuelService.findOne(id));
     }
 
     // Найти заправку по ID c полной информацией
     @GetMapping("/{id}/full")
     public RefuelDTO.Response.GetRefuelFullInfo findOneByIdFullInfo(@PathVariable("id") int id){
-        return convertToDTOFullInfo(refuelServiceImpl.findOne(id));
+        return convertToDTOFullInfo(refuelService.findOne(id));
     }
 
     ////////////////// POST End-points //////////////////
@@ -72,7 +68,7 @@ public class RefuelController {
         }
 
         //В метод save передаем refuel с верно вложенным объектом car
-        refuelServiceImpl.save(convertToRefuel(request));
+        refuelService.save(convertToRefuel(request));
         return ResponseEntity.ok(HttpStatus.OK);
         // TODO внутри ответа ResponseEntity добавить информационные поля по добавленной заправке
     }
@@ -87,7 +83,7 @@ public class RefuelController {
         }
 
         // В метод update передаем
-        refuelServiceImpl.updateLastRefuel(convertToRefuel(request));
+        refuelService.updateLastRefuel(convertToRefuel(request));
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -103,7 +99,7 @@ public class RefuelController {
             throw new RefuelNotDeletedException(errorMessageBuilder(errors));
         }
 
-        refuelServiceImpl.deleteLastRefuel(response.getCarName());
+        refuelService.deleteLastRefuel(response.getCarName());
         return ResponseEntity.ok(HttpStatus.OK);
         // TODO внутри ответа ResponseEntity добавить информационные поля по текущей последней заправке у машины
     }
