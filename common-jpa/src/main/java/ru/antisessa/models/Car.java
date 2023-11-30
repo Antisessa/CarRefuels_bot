@@ -52,6 +52,12 @@ public class Car {
     @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
     private List<Refuel> refuels;
 
+
+    @ManyToOne
+    @JoinColumn(name = "owner", referencedColumnName = "telegram_user_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "jackson_id")
+    private AppUser owner;
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Car{");

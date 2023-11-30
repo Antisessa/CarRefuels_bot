@@ -34,27 +34,27 @@ public class CarController {
     // Найти все машины с их краткой информацией
     @GetMapping()
     public List<CarDTO.Response.GetCar> allCars(){
-        return carService.findAll().stream()
+        return carService.findAllModel().stream()
                 .map(this::carToDTO).collect(Collectors.toList());
     }
     // Найти все машины с их полной информацией
     @GetMapping("/full")
     public List<CarDTO.Response.GetCarFullInfo> allCarsFullInfo(){
-        return carService.findAll().stream()
+        return carService.findAllModel().stream()
                 .map(this::carToDTOFullInfo).collect(Collectors.toList());
     }
 
-    // Найти машину по ID с ее краткими данными
-    @GetMapping("/{id}")
-    public CarDTO.Response.GetCar findOneById(@PathVariable("id") int id){
-        return carToDTO(carService.findOne(id));
-    }
-
-    // Найти машину по ID с ее полными данными
-    @GetMapping("{id}/full")
-    public CarDTO.Response.GetCarFullInfo findOneByIdFullInfo(@PathVariable("id") int id){
-        return carToDTOFullInfo(carService.findOne(id));
-    }
+//    // Найти машину по ID с ее краткими данными
+//    @GetMapping("/{id}")
+//    public CarDTO.Response.GetCar findOneById(@PathVariable("id") int id){
+//        return carToDTO(carService.findOne(id));
+//    }
+//
+//    // Найти машину по ID с ее полными данными
+//    @GetMapping("{id}/full")
+//    public CarDTO.Response.GetCarFullInfo findOneByIdFullInfo(@PathVariable("id") int id){
+//        return carToDTOFullInfo(carService.findOne(id));
+//    }
 
     ////////////////// POST End-points //////////////////
     // Регистрация машины

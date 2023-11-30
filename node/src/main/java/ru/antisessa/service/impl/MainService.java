@@ -36,20 +36,31 @@ public class MainService {
 
         if (CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
+            sendAnswer(output, chatId);
+            return;
+        }
 
-        } else if (BASIC_STATE.equals(userState)) {
-            // если статус user - BASIC, то обрабатываем введенную им команду
-            output = processServiceCommand(appUser, serviceCommand);
 
-        } else if (FINDING_ONE_CAR.equals(userState)) {
-            // если статус user - BASIC, то идем в метод поиска
-            output = appUserService.findOneCar(update);
-            appUserService.switchStateToBasic(appUser);
+        switch (userState) {
+            case BASIC_STATE:
+                output = processServiceCommand(appUser, serviceCommand);
+                break;
 
-        } else if (FINDING_ONE_CAR_FULL_INFO.equals(userState)) {
-            // если статус user - BASIC, то идем в метод поиска
-            output = appUserService.findOneCarFullInfo(update);
-            appUserService.switchStateToBasic(appUser);
+            case FINDING_ONE_CAR:
+                output = appUserService.findOneCar(update);
+                appUserService.switchStateToBasic(appUser);
+                break;
+
+            case FINDING_ONE_CAR_FULL_INFO:
+                output = appUserService.findOneCarFullInfo(update);
+                appUserService.switchStateToBasic(appUser);
+                break;
+
+            case CREATING_CAR_NAME:
+                producerService.produceCreatingCarNameRequest(update);
+                return;
+            default:
+                throw new IllegalStateException("Unexpected value: " + userState);
         }
 
         // В конечном итоге после выполнения одного из блоков if мы получаем ответ для пользователя
@@ -78,6 +89,9 @@ public class MainService {
 
             case FIND_ONE_CAR_FULL_INFO:
                 return findOneCarFullInfoProcess(appUser);
+
+            case CREATE_CAR:
+                return creatingCarProcess(appUser);
             default:
                 return "Неизвестная команда! Чтобы посмотреть список доступных команд введите /help";
         }
@@ -99,6 +113,11 @@ public class MainService {
         return "Команда отменена!";
     }
 
+    private String creatingCarProcess(AppUser appUser){
+        appUserService.switchStateToCreatingCarName(appUser);
+        return "Вы перешли в режим создания машины, введите пожалуйста идентификатор:";
+    }
+
     private String help() {
         return "Список доступных команд:\n"
                 + "/cancel - отмена выполнения текущей команды,\n"
@@ -110,8 +129,6 @@ public class MainService {
 
 
     private AppUser findOrSaveAppUser(User telegramUser) {
-//        // Достаем User из Update
-//        var telegramUser = update.getMessage().getFrom();
 
         //Выполняем проверку наличия этого user в БД
         var optionalAppUser = appUserRepository.findAppUserByTelegramUserId(telegramUser.getId());

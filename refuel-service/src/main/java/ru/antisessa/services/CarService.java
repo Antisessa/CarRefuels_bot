@@ -20,11 +20,11 @@ public class CarService {
     private final ConverterDTO converterDTO;
 
     ////////////// Методы для поиска //////////////
-    public List<Car> findAll(){
+    public List<Car> findAllModel(){
         return carRepository.findAll();
     }
 
-    public Car findOne(int id){
+    public Car findOneModel(int id){
         Optional<Car> foundCar = carRepository.findById(id);
         return foundCar.orElseThrow(CarNotFoundException::new);
     }

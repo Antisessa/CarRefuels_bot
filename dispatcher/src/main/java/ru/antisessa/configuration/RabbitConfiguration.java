@@ -52,4 +52,32 @@ public class RabbitConfiguration {
     public Queue findOneCarFullInfoResponseQueue() {
         return new Queue(FIND_ONE_CAR_FULL_INFO_RESPONSE);
     }
+
+    @Bean
+    public Queue createCarNameRequest() {return new Queue(CREATE_CAR_NAME_REQUEST);}
+
+
+    // Очереди для запросов на смену User state
+    @Bean
+    public Queue switchStateToBasicRequest() {return new Queue(SWITCH_STATE_TO_BASIC);}
+
+    // User state для поиска машины
+    @Bean
+    public Queue switchStateToFindOneCarRequest() {return new Queue(SWITCH_STATE_TO_FIND_ONE_CAR);}
+
+    @Bean
+    public Queue switchStateToFindOneCarFullInfoRequest() {return new Queue(SWITCH_STATE_TO_FIND_ONE_CAR_FULL_INFO);}
+
+    // User state для создания машины
+    @Bean
+    public Queue switchStateToCreatingCarNameRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_NAME);}
+
+    @Bean
+    public Queue switchStateToCreatingCarOdometerRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_ODOMETER);}
+
+    @Bean
+    public Queue switchStateToCreatingCarGasTankVolumeRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_GAS_TANK_VOLUME);}
+
+    @Bean
+    public Queue switchStateToCreatingCarLastConsumptionRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_LAST_CONSUMPTION);}
 }

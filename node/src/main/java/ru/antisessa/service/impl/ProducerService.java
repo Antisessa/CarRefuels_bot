@@ -26,10 +26,20 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(ANSWER_MESSAGE, sendMessage);
     }
 
+    public void produceAnswerWithException(SendMessage sendMessage) {
+        log.debug("NODE Producer Service: produce answer message with exception");
+        rabbitTemplate.convertAndSend(ANSWER_MESSAGE_WITH_EXCEPTION, sendMessage);
+    }
+
     //Метод передает в очередь FIND_ONE_CAR_FULL_INFO_REQUEST update с вложенным id для поиска машины
     public void produceFindOneCarFullInfoRequest(Update update) {
         log.debug("NODE ProducerService: Find one car full info request is produced");
         rabbitTemplate.convertAndSend(FIND_ONE_CAR_FULL_INFO_REQUEST, update);
+    }
+
+    public void produceCreatingCarNameRequest(Update update) {
+        log.debug("NODE ProducerService: Creating car name request is produced");
+        rabbitTemplate.convertAndSend(CREATE_CAR_NAME_REQUEST, update);
     }
 
     //Метод передает в очередь FIND_ONE_CAR_REQUEST update с вложенным id для поиска машины
@@ -123,4 +133,4 @@ public class ProducerService {
             sendMessage.setText(message);
             return sendMessage;
         }
-    }
+}
