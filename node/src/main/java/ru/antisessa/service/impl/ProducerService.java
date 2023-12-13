@@ -42,6 +42,26 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(CREATE_CAR_NAME_REQUEST, update);
     }
 
+    public void produceCreatingCarOdometerRequest(Update update) {
+        log.debug("NODE ProducerService: Creating odometer record request is produced");
+        rabbitTemplate.convertAndSend(CREATE_CAR_ODOMETER_REQUEST, update);
+    }
+
+    public void produceCreatingCarGasTankVolumeRequest(Update update) {
+        log.debug("NODE ProducerService: Creating gas tank volume request is produced");
+        rabbitTemplate.convertAndSend(CREATE_CAR_GAS_TANK_VOLUME_REQUEST, update);
+    }
+
+    public void produceCreatingCarLastConsumptionRequest(Update update) {
+        log.debug("NODE ProducerService: Creating last consumption request is produced");
+        rabbitTemplate.convertAndSend(CREATE_CAR_LAST_CONSUMPTION_REQUEST, update);
+    }
+
+    public void produceCreatingCarFinalValidationRequest(Update update) {
+        log.debug("NODE ProducerService: Creating final validation request is produced");
+        rabbitTemplate.convertAndSend(CREATE_CAR_FINAL_VALIDATION_REQUEST, update);
+    }
+
     //Метод передает в очередь FIND_ONE_CAR_REQUEST update с вложенным id для поиска машины
     public void produceFindOneCarRequest(Update update) {
         log.debug("NODE ProducerService: Find one car request is produced");

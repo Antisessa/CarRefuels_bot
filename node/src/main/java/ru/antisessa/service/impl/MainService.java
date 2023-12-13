@@ -23,17 +23,23 @@ public class MainService {
 
     public void processTextMessage(Update update) {
 
-        var telegramUser = update.getMessage().getFrom();
-        var appUser = findOrSaveAppUser(telegramUser); // поиск и (возможно) добавление пользователя в БД
-        var userState = appUser.getState(); // Получаем состояние пользователя
-        var text = update.getMessage().getText(); // Получаем текстовое сообщение из update message
-        var output = ""; // Переменная содержащая ответ для пользователя
-        var chatId = update.getMessage().getChatId(); // Получаем ID чата из входящего update
+        // Ищем пользователя в БД, если его нет то добавляем
+        var appUser = findOrSaveAppUser(update.getMessage().getFrom());
 
-        // Определяем команду из сообщения пользователя
-        // cancel, registration, start
+        // Получаем состояние пользователя
+        var userState = appUser.getState();
+
+        // Достаем текст сообщения для обработки и chatID для ответного сообщения
+        var text = update.getMessage().getText();
+        var chatId = update.getMessage().getChatId();
+
+        // Переменная содержащая ответ для пользователя
+        var output = "";
+
+        // Определяем команду, если она есть, из сообщения пользователя
         var serviceCommand = ServiceCommand.fromValue(text);
 
+        // Если команда cancel то меняем UserState на BASIC
         if (CANCEL.equals(serviceCommand)) {
             output = cancelProcess(appUser);
             sendAnswer(output, chatId);
@@ -44,27 +50,42 @@ public class MainService {
         switch (userState) {
             case BASIC_STATE:
                 output = processServiceCommand(appUser, serviceCommand);
-                break;
+                sendAnswer(output, chatId);
+                return;
 
             case FINDING_ONE_CAR:
                 output = appUserService.findOneCar(update);
-                appUserService.switchStateToBasic(appUser);
-                break;
+                appUserService.switchStateToBasic(appUser.getId());
+                sendAnswer(output, chatId);
+                return;
 
             case FINDING_ONE_CAR_FULL_INFO:
                 output = appUserService.findOneCarFullInfo(update);
-                appUserService.switchStateToBasic(appUser);
-                break;
+                appUserService.switchStateToBasic(appUser.getId());
+                sendAnswer(output, chatId);
+                return;
 
             case CREATING_CAR_NAME:
                 producerService.produceCreatingCarNameRequest(update);
                 return;
+
+            case CREATING_CAR_ODOMETER:
+                producerService.produceCreatingCarOdometerRequest(update);
+                return;
+
+            case CREATING_CAR_GAS_TANK_VOLUME:
+                producerService.produceCreatingCarGasTankVolumeRequest(update);
+                return;
+
+            case CREATING_CAR_LAST_CONSUMPTION:
+                producerService.produceCreatingCarLastConsumptionRequest(update);
+                return;
+            case CREATING_CAR_FINAL_VALIDATION:
+                producerService.produceCreatingCarFinalValidationRequest(update);
+                return;
             default:
                 throw new IllegalStateException("Unexpected value: " + userState);
         }
-
-        // В конечном итоге после выполнения одного из блоков if мы получаем ответ для пользователя
-        sendAnswer(output, chatId);
     }
 
 
@@ -109,7 +130,7 @@ public class MainService {
     }
 
     private String cancelProcess(AppUser appUser) {
-        appUserService.switchStateToBasic(appUser);
+        appUserService.switchStateToBasic(appUser.getId());
         return "Команда отменена!";
     }
 

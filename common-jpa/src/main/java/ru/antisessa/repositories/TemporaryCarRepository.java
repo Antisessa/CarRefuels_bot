@@ -6,6 +6,7 @@ import ru.antisessa.models.AppUser;
 import ru.antisessa.models.Car;
 import ru.antisessa.models.TemporaryCar;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +15,6 @@ public interface TemporaryCarRepository extends JpaRepository<TemporaryCar, Inte
     Optional<TemporaryCar> findByName(String name);
     Optional<TemporaryCar> findByNameIgnoreCase(String name);
     Optional<TemporaryCar> findByAppUser(AppUser appUser);
+    List<TemporaryCar> findTemporaryCarsByAppUser(AppUser appUser);
+    void deleteAllByAppUser(AppUser appUser);
 }

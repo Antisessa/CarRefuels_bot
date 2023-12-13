@@ -25,13 +25,20 @@ public class AppUserService {
 
     String serviceName = "NODE AppUserService: Success switch ";
     String requestSuccess = "Твой запрос успешно ушел в очередь, жди сигнала.";
+    String userNotFoundText = "Cannot switch state, AppUser not found";
 
     @Transactional
     @RabbitListener(queues = SWITCH_STATE_TO_BASIC)
-    public void switchStateToBasic(AppUser appUser){
-        appUser.setState(BASIC_STATE);
-        appUserRepository.save(appUser);
-        log.debug(serviceName + appUser.getUsername() + " state to BASIC_STATE");
+    public void switchStateToBasic(long id){
+        try {
+            var appUser = extractAppUser(id);
+            appUser.setState(BASIC_STATE);
+            appUserRepository.save(appUser);
+            log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_FINAL_VALIDATION");
+
+        } catch (ClassNotFoundException e) {
+            log.error(userNotFoundText);
+        }
     }
 
     @Transactional
@@ -61,34 +68,57 @@ public class AppUserService {
     @Transactional
     @RabbitListener(queues = SWITCH_STATE_TO_CREATING_CAR_ODOMETER)
     public void switchStateToCreatingCarOdometer(long id) {
-        Optional<AppUser> optionalAppUser = appUserRepository.findById(id);
+        try {
+            var appUser = extractAppUser(id);
+            appUser.setState(CREATING_CAR_ODOMETER);
+            appUserRepository.save(appUser);
+            log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_ODOMETER");
 
-        if (optionalAppUser.isEmpty()) {
-            log.error("Cannot switch state, AppUser is empty");
-            return;
+        } catch (ClassNotFoundException e) {
+            log.error(userNotFoundText);
         }
-
-        var appUser = optionalAppUser.get();
-
-        appUser.setState(CREATING_CAR_ODOMETER);
-        appUserRepository.save(appUser);
-        log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_ODOMETER");
     }
 
     @Transactional
     @RabbitListener(queues = SWITCH_STATE_TO_CREATING_CAR_GAS_TANK_VOLUME)
-    public void switchStateToCreatingCarGasTankVolume(AppUser appUser) {
-        appUser.setState(CREATING_CAR_GAS_TANK_VOLUME);
-        appUserRepository.save(appUser);
-        log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_VOLUME");
+    public void switchStateToCreatingCarGasTankVolume(long id) {
+        try {
+            var appUser = extractAppUser(id);
+            appUser.setState(CREATING_CAR_GAS_TANK_VOLUME);
+            appUserRepository.save(appUser);
+            log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_GAS_TANK_VOLUME");
+
+        } catch (ClassNotFoundException e) {
+            log.error(userNotFoundText);
+        }
     }
 
     @Transactional
     @RabbitListener(queues = SWITCH_STATE_TO_CREATING_CAR_LAST_CONSUMPTION)
-    public void switchStateToCreatingCarLastConsumption(AppUser appUser) {
-        appUser.setState(CREATING_CAR_LAST_CONSUMPTION);
-        appUserRepository.save(appUser);
-        log.debug(serviceName + appUser.getUsername() + " state to CREATING_LAST_CONSUMPTION");
+    public void switchStateToCreatingCarLastConsumption(long id) {
+        try {
+            var appUser = extractAppUser(id);
+            appUser.setState(CREATING_CAR_LAST_CONSUMPTION);
+            appUserRepository.save(appUser);
+            log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_LAST_CONSUMPTION");
+
+        } catch (ClassNotFoundException e) {
+            log.error(userNotFoundText);
+        }
+    }
+
+    @Transactional
+    @RabbitListener(queues = SWITCH_STATE_TO_CREATING_CAR_FINAL_VALIDATION)
+    public void switchStateToCreatingCarFinalValidation(long id) {
+        try {
+            var appUser = extractAppUser(id);
+            appUser.setState(CREATING_CAR_FINAL_VALIDATION);
+            appUserRepository.save(appUser);
+            log.debug(serviceName + appUser.getUsername() + " state to CREATING_CAR_FINAL_VALIDATION");
+
+        } catch (ClassNotFoundException e) {
+            log.error(userNotFoundText);
+        }
     }
 
     public String findOneCar(Update update) {
@@ -99,5 +129,16 @@ public class AppUserService {
     public String findOneCarFullInfo(Update update) {
         producerService.produceFindOneCarFullInfoRequest(update);
         return requestSuccess;
+    }
+
+    private AppUser extractAppUser(long id) throws ClassNotFoundException {
+        Optional<AppUser> optionalAppUser = appUserRepository.findById(id);
+
+        if (optionalAppUser.isEmpty()) {
+            log.error("Cannot switch state, AppUser not found");
+            throw new ClassNotFoundException();
         }
+
+        return optionalAppUser.get();
+    }
 }

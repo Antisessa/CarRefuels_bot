@@ -52,41 +52,11 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(FIND_ONE_CAR_FULL_INFO_RESPONSE, answer);
     }
 
-    public void produceSwitchStateToBasicRequest(AppUser appUser){
-        log.debug("RefuelService Producer: Create switch state to basic request for " + appUser.getTelegramUserId());
-        rabbitTemplate.convertAndSend(SWITCH_STATE_TO_BASIC, appUser);
-    }
-
-    public void produceSwitchStateToCreatingCarNameRequest(AppUser appUser){
-        log.debug("RefuelService Producer: Create switch state to create car name request for "
-                + appUser.getTelegramUserId());
-        rabbitTemplate.convertAndSend(SWITCH_STATE_TO_CREATING_CAR_NAME, appUser);
-    }
-
     @Transactional
-    public void produceSwitchStateToCreatingCarOdometerRequest(AppUser appUser){
-        log.debug("RefuelService Producer: Prepare request 'switch state to create car odometer' for "
-                + appUser.getTelegramUserId());
-
-        try {
-            log.debug("AppUser proxy is initialized? - " + Hibernate.isInitialized(appUser));
-            Hibernate.initialize(appUser);
-            log.debug("AppUser proxy is initialized? - " + Hibernate.isInitialized(appUser));
-
-            log.debug("AppUser's cars proxy is initialized? - " + Hibernate.isInitialized(appUser.getCars()));
-            Hibernate.initialize(appUser.getCars());
-            log.debug("AppUser's cars proxy is initialized? - " + Hibernate.isInitialized(appUser.getCars()));
-
-            log.debug("Car's refuels proxy is initialized? - " + Hibernate.isInitialized(appUser.getCars().get(0).getRefuels()));
-            Hibernate.initialize(appUser.getCars().get(0).getRefuels());
-            log.debug("Car's refuels proxy is initialized? - " + Hibernate.isInitialized(appUser.getCars().get(0).getRefuels()));
-
-        } catch (LazyInitializationException e) {
-            log.debug("LazyInitializationException убило сервис нахуй");
-        }
-        log.debug("RefuelService Producer: produce request for " + appUser.getTelegramUserId());
-
-        rabbitTemplate.convertAndSend(SWITCH_STATE_TO_CREATING_CAR_ODOMETER, appUser.getId());
+    public void produceSwitchStateRequest(long id, String queue){
+        log.debug("RefuelService Producer: Prepare request " +
+                queue + " for AppUser with id = " + id);
+            rabbitTemplate.convertAndSend(queue, id);
     }
 }
 

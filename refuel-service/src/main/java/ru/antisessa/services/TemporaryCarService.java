@@ -10,7 +10,6 @@ import ru.antisessa.models.TemporaryCar;
 import ru.antisessa.repositories.TemporaryCarRepository;
 import ru.antisessa.util.car.CarNotFoundException;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,9 +21,8 @@ public class TemporaryCarService {
     private final TemporaryCarRepository temporaryCarRepository;
     private final CarService carService;
 
-    public TemporaryCar findOneByAppUser(AppUser appUser){
-        Optional<TemporaryCar> foundCar = temporaryCarRepository.findByAppUser(appUser);
-        return foundCar.orElse(null);
+    public Optional<TemporaryCar> findOneByAppUser(AppUser appUser){
+        return temporaryCarRepository.findByAppUser(appUser);
     }
 
     @Transactional
@@ -61,7 +59,7 @@ public class TemporaryCarService {
     }
 
     @Transactional
-    public void setConsumption(TemporaryCar temporaryCar, double consumption){
+    public void setLastConsumption(TemporaryCar temporaryCar, double consumption){
         temporaryCar.setLastConsumption(consumption);
         temporaryCarRepository.save(temporaryCar);
     }
@@ -71,6 +69,12 @@ public class TemporaryCarService {
         return foundCar.orElseThrow(CarNotFoundException::new);
     }
 
+    @Transactional
+    public void truncateAllForUser(AppUser appUser){
+        temporaryCarRepository.deleteAllByAppUser(appUser);
+    }
+
+    //TODO Проверять уникальность идентификаторов из temporary Car тоже
     public boolean checkUniqueName(String name) {
         List<Car> existsCars = carService.findAllModel();
 

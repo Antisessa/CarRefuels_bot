@@ -56,19 +56,31 @@ public class RabbitConfiguration {
     @Bean
     public Queue createCarNameRequest() {return new Queue(CREATE_CAR_NAME_REQUEST);}
 
+    @Bean
+    public Queue createCarOdometerRequest() {return new Queue(CREATE_CAR_ODOMETER_REQUEST);}
+
+    @Bean
+    public Queue createCarGasTankVolumeRequest() {return new Queue(CREATE_CAR_GAS_TANK_VOLUME_REQUEST);}
+
+    @Bean
+    public Queue createCarLastConsumptionRequest() {return new Queue(CREATE_CAR_LAST_CONSUMPTION_REQUEST);}
+
+    @Bean
+    public Queue createCarFinalValidationRequest() {return new Queue(CREATE_CAR_FINAL_VALIDATION_REQUEST);}
+
 
     // Очереди для запросов на смену User state
     @Bean
     public Queue switchStateToBasicRequest() {return new Queue(SWITCH_STATE_TO_BASIC);}
 
-    // User state для поиска машины
+    // User states для поиска машины
     @Bean
     public Queue switchStateToFindOneCarRequest() {return new Queue(SWITCH_STATE_TO_FIND_ONE_CAR);}
 
     @Bean
     public Queue switchStateToFindOneCarFullInfoRequest() {return new Queue(SWITCH_STATE_TO_FIND_ONE_CAR_FULL_INFO);}
 
-    // User state для создания машины
+    // User states для создания машины
     @Bean
     public Queue switchStateToCreatingCarNameRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_NAME);}
 
@@ -80,4 +92,7 @@ public class RabbitConfiguration {
 
     @Bean
     public Queue switchStateToCreatingCarLastConsumptionRequest() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_LAST_CONSUMPTION);}
+
+    @Bean
+    public Queue switchStateToCreatingCarFinalValidation() {return new Queue(SWITCH_STATE_TO_CREATING_CAR_FINAL_VALIDATION);}
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.antisessa.DTO.CarDTO;
 import ru.antisessa.models.Car;
+import ru.antisessa.models.TemporaryCar;
 import ru.antisessa.repositories.CarRepository;
 import ru.antisessa.util.car.CarAlreadyCreatedException;
 import ru.antisessa.util.car.CarNotFoundException;
@@ -98,6 +99,22 @@ public class CarService {
         if(optionalCar.isEmpty())
             throw new CarNotFoundException("Машины с таким идентификатором не существует.");
         carRepository.delete(optionalCar.get());
+
+    }
+
+    ////////////// Метод для переноса машины из Temporary Car //////////////
+    @Transactional
+    public void migrate(TemporaryCar temporaryCar){
+
+        Car car = Car.builder()
+                .name(temporaryCar.getName())
+                .lastConsumption(temporaryCar.getLastConsumption())
+                .odometer(temporaryCar.getOdometer())
+                .gasTankVolume(temporaryCar.getGasTankVolume())
+                .owner(temporaryCar.getAppUser())
+                .build();
+
+        carRepository.save(car);
 
     }
 }
